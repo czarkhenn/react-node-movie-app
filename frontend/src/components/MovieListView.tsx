@@ -1,15 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import {
-  Container,
-  Row,
-  Col,
-  Card,
-  Form,
-  Button,
-  Spinner,
-} from 'react-bootstrap';
+import { Container, Row, Col, Card, Form, Spinner } from 'react-bootstrap';
 import { fetchMovies } from '../api';
 import { Movie } from '../interfaces';
 import PaginationComponent from './Pagination';
@@ -31,7 +22,7 @@ const MovieListView = () => {
       const results = Search;
       const { totalResults } = initialMovies;
       setMovies(results || []);
-      setTotalPages(Math.ceil(Number(totalResults) / 10));
+      setTotalPages(Number(totalResults));
     } catch (error) {
       console.error('Error fetching initial movies:', error);
     } finally {
@@ -43,7 +34,7 @@ const MovieListView = () => {
     getMovieResults();
   }, [currentPage]);
 
-  const handlePageChange = async (page: number) => {
+  const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
 
@@ -69,9 +60,6 @@ const MovieListView = () => {
           onChange={(e) => setSearch(e.target.value)}
           className='me-2 w-50'
         />
-        <Button onClick={getMovieResults} variant='success'>
-          Search
-        </Button>
       </Form>
       {loading ? (
         <div className='text-center'>
@@ -79,22 +67,27 @@ const MovieListView = () => {
         </div>
       ) : (
         <>
+          <Row className='d-flex justify-content-center mb-3'>
+            <Col xs='auto'>
+              <PaginationComponent
+                currentPage={currentPage}
+                totalItems={totalPages}
+                onPageChange={handlePageChange}
+              />
+            </Col>
+          </Row>
           <Row className='justify-content-center'>
-            <PaginationComponent
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-            />
             {movies.map((movie) => (
               <Col
                 key={movie.imdbID}
                 xs={12}
                 sm={6}
                 md={4}
-                lg={2}
+                lg={3}
+                xl={2}
                 className='mb-4'>
                 <Card
-                  className='card-clickable h-100 d-flex flex-column'
+                  className='h-100 d-flex flex-column card-clickable'
                   onClick={() => handleCardClick(movie.imdbID)}>
                   <Card.Img
                     variant='top'
@@ -106,11 +99,6 @@ const MovieListView = () => {
                       <Card.Title>{movie.Title}</Card.Title>
                       <Card.Text>{movie.Year}</Card.Text>
                     </div>
-                    <Link
-                      to={`/movie/${movie.imdbID}`}
-                      className='btn btn-primary mt-3'>
-                      View Details
-                    </Link>
                   </Card.Body>
                 </Card>
               </Col>
