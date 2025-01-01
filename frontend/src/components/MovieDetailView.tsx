@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Container, Card, Spinner } from 'react-bootstrap';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Container, Row, Col, Button, ListGroup } from 'react-bootstrap';
 import { getMovieDetail } from '../api';
 import { MovieDetail } from '../interfaces';
 
-function MovieDetailView() {
+const MovieDetailView = () => {
   const { id } = useParams<{ id: string }>();
   const [movie, setMovie] = useState<MovieDetail | null>(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMovie = async () => {
@@ -17,7 +18,6 @@ function MovieDetailView() {
           const details = await getMovieDetail(id);
           setMovie(details);
         }
-        console.log(movie);
       } catch (error) {
         console.error('Error fetching movie details:', error);
       } finally {
@@ -30,91 +30,89 @@ function MovieDetailView() {
 
   if (loading) {
     return (
-      <Container className='mt-5 text-center'>
-        <Spinner animation='border' variant='primary' />
+      <Container className="mt-5 text-center">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
       </Container>
     );
   }
 
   return (
-    <Container className='mt-5'>
+    <Container className="mt-5">
+      <Button variant="primary" onClick={() => navigate(-1)} className="mb-4">
+        &larr; Back
+      </Button>
       {movie && (
-        <Card>
-          <Card.Img variant='top' src={movie.Poster} alt={movie.Title} />
-          <Card.Body>
-            <Card.Title>{movie.Title}</Card.Title>
-            <Card.Text>
-              <strong>Year:</strong> {movie.Year}
-            </Card.Text>
-            <Card.Text>
-              <strong>Rated:</strong> {movie.Rated}
-            </Card.Text>
-            <Card.Text>
-              <strong>Released:</strong> {movie.Released}
-            </Card.Text>
-            <Card.Text>
-              <strong>Runtime:</strong> {movie.Runtime}
-            </Card.Text>
-            <Card.Text>
-              <strong>Genre:</strong> {movie.Genre}
-            </Card.Text>
-            <Card.Text>
-              <strong>Director:</strong> {movie.Director}
-            </Card.Text>
-            <Card.Text>
-              <strong>Writer:</strong> {movie.Writer}
-            </Card.Text>
-            <Card.Text>
-              <strong>Actors:</strong> {movie.Actors}
-            </Card.Text>
-            <Card.Text>
-              <strong>Plot:</strong> {movie.Plot}
-            </Card.Text>
-            <Card.Text>
-              <strong>Language:</strong> {movie.Language}
-            </Card.Text>
-            <Card.Text>
-              <strong>Country:</strong> {movie.Country}
-            </Card.Text>
-            <Card.Text>
-              <strong>Awards:</strong> {movie.Awards}
-            </Card.Text>
-            <Card.Text>
-              <strong>Ratings:</strong>
-            </Card.Text>
-            <ul>
+        <>
+          <div className="movie-hero d-flex align-items-center mb-5">
+            <img src={movie.Poster} alt={movie.Title} className="hero-poster me-4" />
+            <div>
+              <h1>{movie.Title}</h1>
+              <p>
+                <strong>{movie.Year}</strong> | {movie.Runtime} | {movie.Genre}
+              </p>
+              <p>
+                <strong>IMDB Rating:</strong> {movie.imdbRating} ({movie.imdbVotes} votes)
+              </p>
+              <Button variant="primary" href={movie.Website} target="_blank">
+                Official Website
+              </Button>
+            </div>
+          </div>
+
+          <Row>
+            <Col md={8}>
+              <h2>Overview</h2>
+              <p>{movie.Plot}</p>
+              <ListGroup variant="flush">
+                <ListGroup.Item>
+                  <strong>Director:</strong> {movie.Director}
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  <strong>Writer:</strong> {movie.Writer}
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  <strong>Actors:</strong> {movie.Actors}
+                </ListGroup.Item>
+              </ListGroup>
+            </Col>
+            <Col md={4}>
+              <h2>Details</h2>
+              <ListGroup>
+                <ListGroup.Item>
+                  <strong>Language:</strong> {movie.Language}
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  <strong>Country:</strong> {movie.Country}
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  <strong>Awards:</strong> {movie.Awards}
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  <strong>Box Office:</strong> {movie.BoxOffice}
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  <strong>Production:</strong> {movie.Production}
+                </ListGroup.Item>
+              </ListGroup>
+            </Col>
+          </Row>
+
+          <div className="mt-5">
+            <h2>Ratings</h2>
+            <ListGroup>
               {movie.Ratings.map((rating, index) => (
-                <li key={index}>
-                  {rating.Source}: {rating.Value}
-                </li>
+                <ListGroup.Item key={index}>
+                  <strong>{rating.Source}:</strong> {rating.Value}
+                </ListGroup.Item>
               ))}
-            </ul>
-            <Card.Text>
-              <strong>Metascore:</strong> {movie.Metascore}
-            </Card.Text>
-            <Card.Text>
-              <strong>IMDB Rating:</strong> {movie.imdbRating}
-            </Card.Text>
-            <Card.Text>
-              <strong>IMDB Votes:</strong> {movie.imdbVotes}
-            </Card.Text>
-            <Card.Text>
-              <strong>Box Office:</strong> {movie.BoxOffice}
-            </Card.Text>
-            <Card.Text>
-              <strong>Production:</strong> {movie.Production}
-            </Card.Text>
-            <Card.Text>
-              <strong>Website:</strong>{' '}
-              <a href={movie.Website} target='_blank' rel='noopener noreferrer'>
-                {movie.Website}
-              </a>
-            </Card.Text>
-          </Card.Body>
-        </Card>
+            </ListGroup>
+          </div>
+        </>
       )}
     </Container>
   );
-}
+};
 
 export default MovieDetailView;
