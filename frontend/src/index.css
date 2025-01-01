@@ -27,3 +27,29 @@ code {
   height: 300px; /* Adjust as needed */
   object-fit: cover;
 }
+
+/* Ensure the cards fit five in a row on larger screens */
+@media (min-width: 1200px) {
+  .col-lg-2 {
+    flex: 0 0 20%;
+    max-width: 20%;
+  }
+}
+
+/* Add some margin to rows and cards */
+.row {
+  margin: 0 auto;
+}
+.card {
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.card-clickable {
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.card-clickable:hover {
+  transform: scale(1.05);
+}
