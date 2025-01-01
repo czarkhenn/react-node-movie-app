@@ -45,7 +45,8 @@ export interface MovieDetail {
 }
 
 export interface PaginationProps {
+  totalItems: number;
   currentPage: number;
-  totalPages: number;
   onPageChange: (page: number) => void;
+  maxVisiblePages?: number; // Optional: Max number of pages to display
 }
