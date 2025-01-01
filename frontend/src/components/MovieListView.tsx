@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import {
   Container,
@@ -8,18 +9,19 @@ import {
   Form,
   Button,
   Spinner,
-  Pagination,
 } from 'react-bootstrap';
 import { fetchMovies } from '../api';
 import { Movie } from '../interfaces';
+import PaginationComponent from './Pagination';
 
-export default function MovieListView() {
+const MovieListView = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(false);
   const getMovieList = fetchMovies;
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const navigate = useNavigate();
 
   const getMovieResults = async () => {
     setLoading(true);
@@ -45,17 +47,29 @@ export default function MovieListView() {
     setCurrentPage(page);
   };
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      getMovieResults();
+      event.preventDefault();
+    }
+  };
+
+  const handleCardClick = (movieId: string) => {
+    navigate(`/movie/${movieId}`);
+  };
+
   return (
     <Container className='mt-5'>
-      <Form className='d-flex flex-column align-items-center mb-4'>
+      <Form className='d-flex justify-content-center align-items-center mb-4'>
         <Form.Control
           type='text'
           placeholder='Search movies'
           value={search}
+          onKeyDown={handleKeyDown}
           onChange={(e) => setSearch(e.target.value)}
-          className='mb-2 w-50'
+          className='me-2 w-50'
         />
-        <Button onClick={getMovieResults} variant='primary'>
+        <Button onClick={getMovieResults} variant='success'>
           Search
         </Button>
       </Form>
@@ -65,22 +79,23 @@ export default function MovieListView() {
         </div>
       ) : (
         <>
-          <Row>
-            <Pagination className='justify-content-center mb-4'>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                (page) => (
-                  <Pagination.Item
-                    key={page}
-                    active={page === currentPage}
-                    onClick={() => handlePageChange(page)}>
-                    {page}
-                  </Pagination.Item>
-                )
-              )}
-            </Pagination>
+          <Row className='justify-content-center'>
+            <PaginationComponent
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
             {movies.map((movie) => (
-              <Col key={movie.imdbID} md={4} className='mb-4'>
-                <Card className='h-100 d-flex flex-column'>
+              <Col
+                key={movie.imdbID}
+                xs={12}
+                sm={6}
+                md={4}
+                lg={2}
+                className='mb-4'>
+                <Card
+                  className='card-clickable h-100 d-flex flex-column'
+                  onClick={() => handleCardClick(movie.imdbID)}>
                   <Card.Img
                     variant='top'
                     src={movie.Poster}
@@ -105,4 +120,6 @@ export default function MovieListView() {
       )}
     </Container>
   );
-}
+};
+
+export default MovieListView;
