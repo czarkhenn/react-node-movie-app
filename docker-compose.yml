@@ -1,29 +1,37 @@
 services:
   backend:
-    build: 
+    build:
       dockerfile: ./compose/backend/Dockerfile
       context: .
     ports:
-      - "5000:5000"
+      - '5000:5000'
     env_file: .env
     environment:
       OMDB_API_KEY: ${OMDB_API_KEY}
       OMDB_URL: ${OMDB_URL}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      CACHE_TTL: ${CACHE_TTL}
     volumes:
       - ./backend:/app
-    command: "npm run dev"
+    depends_on:
+      - redis
+    command: 'npm run dev'
 
   frontend:
-    build: 
+    build:
       dockerfile: ./compose/frontend/Dockerfile
       context: .
     ports:
-      - "3000:3000"
+      - '3000:3000'
     env_file: .env
     environment:
       REACT_APP_API_URL: ${REACT_APP_API_URL}
     volumes:
       - ./frontend:/app
-    command: "npm start"
+    command: 'npm start'
 
-
+  redis:
+    image: 'redis:latest'
+    ports:
+      - '6379:6379'
