@@ -9,30 +9,29 @@ const MovieListView = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(false);
-  const getMovieList = fetchMovies;
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const navigate = useNavigate();
 
-  const getMovieResults = async () => {
-    setLoading(true);
-    try {
-      const initialMovies = await getMovieList(search, currentPage);
-      const { Search } = initialMovies;
-      const results = Search;
-      const { totalResults } = initialMovies;
-      setMovies(results || []);
-      setTotalPages(Number(totalResults));
-    } catch (error) {
-      console.error('Error fetching initial movies:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const getMovieResults = async () => {
+      setLoading(true);
+      try {
+        const initialMovies = await fetchMovies(search, currentPage);
+        const { Search } = initialMovies;
+        const results = Search;
+        const { totalResults } = initialMovies;
+        setMovies(results || []);
+        setTotalPages(Number(totalResults));
+      } catch (error) {
+        console.error('Error fetching initial movies:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     getMovieResults();
-  }, [currentPage]);
+  }, [search, currentPage]); // Add dependencies to ensure proper updates
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -40,8 +39,7 @@ const MovieListView = () => {
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      getMovieResults();
-      event.preventDefault();
+      setCurrentPage(1); // Reset to the first page on a new search
     }
   };
 
@@ -50,25 +48,30 @@ const MovieListView = () => {
   };
 
   return (
-    <Container className='mt-5'>
-      <Form className='d-flex justify-content-center align-items-center mb-4'>
-        <Form.Control
-          type='text'
-          placeholder='Search movies'
-          value={search}
-          onKeyDown={handleKeyDown}
-          onChange={(e) => setSearch(e.target.value)}
-          className='me-2 w-50'
-        />
-      </Form>
+    <Container className="mt-5">
+      <Row className="justify-content-center">
+        <Col xs={12} sm={10} md={8} lg={6} xl={5}>
+          <Form className="d-flex justify-content-center align-items-center mb-4">
+            <Form.Control
+              type="text"
+              placeholder="Search movies"
+              value={search}
+              onKeyDown={handleKeyDown}
+              onChange={(e) => setSearch(e.target.value)}
+              className="rounded-pill"
+              size="lg"
+            />
+          </Form>
+        </Col>
+      </Row>
       {loading ? (
-        <div className='text-center'>
-          <Spinner animation='border' variant='primary' />
+        <div className="text-center">
+          <Spinner animation="border" variant="primary" />
         </div>
       ) : (
         <>
-          <Row className='d-flex justify-content-center mb-3'>
-            <Col xs='auto'>
+          <Row className="d-flex justify-content-center mb-3">
+            <Col xs="auto">
               <PaginationComponent
                 currentPage={currentPage}
                 totalItems={totalPages}
@@ -76,7 +79,7 @@ const MovieListView = () => {
               />
             </Col>
           </Row>
-          <Row className='justify-content-center'>
+          <Row className="justify-content-center">
             {movies.map((movie) => (
               <Col
                 key={movie.imdbID}
@@ -85,16 +88,18 @@ const MovieListView = () => {
                 md={4}
                 lg={3}
                 xl={2}
-                className='mb-4'>
+                className="mb-4"
+              >
                 <Card
-                  className='h-100 d-flex flex-column card-clickable'
-                  onClick={() => handleCardClick(movie.imdbID)}>
+                  className="h-100 d-flex flex-column card-clickable"
+                  onClick={() => handleCardClick(movie.imdbID)}
+                >
                   <Card.Img
-                    variant='top'
+                    variant="top"
                     src={movie.Poster}
                     alt={movie.Title}
                   />
-                  <Card.Body className='d-flex flex-column justify-content-between'>
+                  <Card.Body className="d-flex flex-column justify-content-between">
                     <div>
                       <Card.Title>{movie.Title}</Card.Title>
                       <Card.Text>{movie.Year}</Card.Text>
