@@ -9,5 +9,4 @@ logs-front:
 logs-back:
 	docker-compose -f docker-compose.yml logs -f backend
 restart:
-	make stop
-	make start
+	make stop && make start
