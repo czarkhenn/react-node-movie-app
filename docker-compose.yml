@@ -1,8 +1,8 @@
 services:
   backend:
     build:
-      dockerfile: ./compose/backend/Dockerfile
-      context: .
+      context: ./backend
+      dockerfile: Dockerfile 
     ports:
       - '5000:5000'
     env_file: .env
@@ -14,14 +14,15 @@ services:
       CACHE_TTL: ${CACHE_TTL}
     volumes:
       - ./backend:/app
+      - /app/node_modules
     depends_on:
       - redis
     command: 'npm run dev'
 
   frontend:
     build:
-      dockerfile: ./compose/frontend/Dockerfile
-      context: .
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
       - '3000:3000'
     env_file: .env
@@ -29,6 +30,9 @@ services:
       REACT_APP_API_URL: ${REACT_APP_API_URL}
     volumes:
       - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
     command: 'npm start'
 
   redis:
