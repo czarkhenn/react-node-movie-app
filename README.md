@@ -24,7 +24,7 @@ Copy the contents of `.env.dev` file
 [react-node-movie-app] touch .env && cp .env.dev .env
 ```
 
-`Set your OMDB_API_KEY`
+Set the `OMDB_API_KEY` with your API KEY
 Get OMDB API Key [Here](https://www.omdbapi.com/apikey.aspx)
 
 #### Building the app
