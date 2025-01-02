@@ -1,12 +1,13 @@
 # React Node Movie App ✨
 
-A simple movie list viewer that that fetches data from omdb api. Supports searching for movie titles and viewing movie details.
+A simple movie list viewer that fetches data from omdb api. Supports searching for movie titles and viewing movie details. Results are cached, UI is responsive for any display size, Simplified Design, can do search while typing the titles.
 
 ### Tech Stack
 - TypeScript
 - React
 - Node
 - Express
+- React Bootstrap
 
 ## Local Development
 
