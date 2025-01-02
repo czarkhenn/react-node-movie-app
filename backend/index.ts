@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import movieRoutes from './api';
+import movieRoutes from './routes/movies';
 
 const app = express();
 const port = 5000;
