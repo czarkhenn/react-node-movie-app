@@ -1,4 +1,4 @@
-# React Node Movie App
+# React Node Movie App ✨
 
 A simple movie that that fetches data from omdb api. Supports searching for movie titles and viewing movie details.
 
@@ -15,6 +15,17 @@ A simple movie that that fetches data from omdb api. Supports searching for movi
 
 ### Running Locally
 
+
+#### Setup Environment Variables
+
+Copy the contents of `.env.dev` file
+```
+[react-node-movie-app] touch .env && cp .env.dev .env
+```
+
+`Set your OMDB_API_KEY`
+Get OMDB API Key [Here](https://www.omdbapi.com/apikey.aspx)
+
 #### Building the app
 ```
 [react-node-movie-app] make build
@@ -24,6 +35,12 @@ A simple movie that that fetches data from omdb api. Supports searching for movi
 ```
 [react-node-movie-app] make start
 ```
+
+## Frontend
+`localhost:3000`
+
+## Backend
+`localhost:5000`
 
 #### Checking logs for frontend and backend
 ```
