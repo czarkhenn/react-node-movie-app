@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -10,89 +14,4 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
-}
-
-.card-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-}
-
-.card {
-  height: 100%;
-}
-
-.card-image {
-  height: 300px; /* Adjust as needed */
-  object-fit: cover;
-}
-
-/* Responsive card styling */
-.card-clickable {
-  cursor: pointer;
-  transition: transform 0.2s ease-in-out;
-}
-
-.card-clickable:hover {
-  transform: scale(1.05);
-}
-
-
-/* Adjust text size for smaller screens */
-@media (max-width: 576px) {
-  .card-title {
-    font-size: 1rem;
-  }
-
-  .card-text {
-    font-size: 0.9rem;
-  }
-
-  .pagination .page-link {
-    font-size: 0.8rem;
-  }
-}
-
-
-.movie-poster {
-  max-height: 100%;
-  max-width: 100%;
-  object-fit: cover;
-}
-
-.movie-hero {
-  display: flex;
-  background: #f8f9fa;
-  padding: 20px;
-  border-radius: 10px;
-}
-
-.hero-poster {
-  max-width: 200px;
-  max-height: 300px;
-  object-fit: cover;
-  border-radius: 5px;
-}
-
-h1 {
-  font-size: 2.5rem;
-  font-weight: bold;
-}
-
-h2 {
-  margin-top: 20px;
-  font-size: 1.8rem;
-}
-
-p {
-  margin: 5px 0;
-}
-
-button {
-  margin-top: 10px;
-}
-
-.list-group-item {
-  border: none;
 }
